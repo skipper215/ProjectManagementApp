@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ToDoList App</title>
+        <link rel="stylesheet" href="style.css"> 
+        <script src="javascript.js"></script>
+    </head>
+
+    <body>
+        <h1>Ivan's To Do List: </h1>
+        <input class="js-input" onkeydown="handleKeyDown(event), displayToDos()" placeholder="What's next?"></input>
+        <button class="js-add" onclick="addToDo(), displayToDos()" >add</button> 
+        
+        
+        <ul class="todos"> <!-- Where the activities go -->
+            
+        </ul>
+
+        <p></p>
+    </body>
+</html>

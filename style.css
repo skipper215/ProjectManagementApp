@@ -1,0 +1,27 @@
+* {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+h1 {
+    background-color: burlywood;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.toDoItem {
+    color: brown;
+    list-style: none;
+    margin-left:-40px;
+    padding: 10px;
+    border: 2px solid black;
+    margin-bottom: 20px;
+    background-color: beige;
+    border-radius: 10px;
+}
+
+.js-input {
+    padding: 2px;
+    border-radius: 4px;
+    width: 300px;
+}
+
