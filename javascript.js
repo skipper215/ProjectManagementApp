@@ -3,20 +3,36 @@ const toDoList = JSON.parse(localStorage.getItem("todos")) || [{
     name: "",
     dueDate: ""
 }];
-let completedToDoList = []; 
+let completedToDoList = JSON.parse(localStorage.getItem("completedToDoList")) || []; 
 
-window.onload = displayToDos;
+window.onload = displayToDos(), displayCompletedToDos();
+
 
 function addToDo() {
     const inputElement = document.querySelector(".js-input");
     const inputDateElement = document.querySelector(".js-date")
-    toDoList.push({
-        name: inputElement.value,
-        dueDate: inputDateElement.value
-    });
+    // Date format to DD-MM-YYYY
+    const [year, month, day] = inputDateElement.value.split('-');
+    const formatDate = `${day}/${month}/${year}`
+
+    if(inputElement.value && !inputDateElement.value) {
+        toDoList.push({
+            name: inputElement.value,
+            dueDate: ""
+        });
+    }
+    else if(inputElement.value && inputDateElement.value) {
+        toDoList.push({
+            name: inputElement.value,
+            dueDate: formatDate
+        });
+    }
+        
     inputElement.value = ""; //clears search box
     localStorage.setItem("todos", JSON.stringify(toDoList))
-    console.log(toDoList);
+    console.log(inputDateElement.value);
+
+
 }
 
 function removeToDo(index) {
@@ -39,9 +55,11 @@ function displayToDos() {
         const name = toDoObject.name;
         const date = toDoObject.dueDate;
         todoElement.innerHTML += 
-        `<li class='toDoItem'> 
-        <input class= 'checkbox-todo' type='checkbox' data-index=${i}>${name} ${date}
-        <button onclick="removeToDo(${i})" class='js-remove'>Remove</button> 
+        `<li class='toDoItem'>
+        <input class= 'checkbox-todo' type='checkbox' data-index=${i} id="toDoLabel${i}"> 
+        <label for="toDoLabel${i}" id="label${i}">${name}</label><p class="dueDate">${date}<p>
+        <button onclick="removeToDo(${i})" class='removeToDo'>🗑️</button>
+        <button onclick="editToDo(${i})" class='editToDo'>Edit</button> 
         </li>`;
     }
     // check checkboxes
@@ -53,21 +71,17 @@ function displayToDos() {
             const checkedToDo = toDoList[index];
             if (checkbox.checked) {
                 completedToDoList.push(checkedToDo);
+                localStorage.setItem("completedToDoList", JSON.stringify(completedToDoList))
                 removeToDo(index);
             } else {
                 //remove it from completedToDoList
                 completedToDoList = completedToDoList.filter(item => item !== checkedToDo); //keep all items 'as long as' != toDoObject
-                
-                console.log("removed: " + completedToDoList);
+                localStorage.setItem("completedToDoList", JSON.stringify(completedToDoList))
             }
             displayCompletedToDos();
             
         })
     })
-
-
-
-    
 }
 
 function displayCompletedToDos() {
@@ -76,12 +90,36 @@ function displayCompletedToDos() {
     completedToDoElement.innerHTML =""; //remove previous instance of completedToDoList display
     for (let i=0; i<completedToDoList.length; i++) {
         const name = completedToDoList[i].name;
-        console.log(completedToDoList[i]);
+        const date = completedToDoList[i].dueDate;
+
 
         completedToDoElement.innerHTML +=
         `<li class="completedToDoItem">
-            ${name}
+            ✅ ${name} <p><em>Completed on ${date}</em></p> <button class="removeCompletedToDo" onclick="removeCompletedToDo(${i})">❌</button>
         </li>
         `
     }
 }
+
+function removeCompletedToDo(index) {
+    //remove from completeToDoList array
+    completedToDoList.splice(index, 1);
+    localStorage.setItem("completedToDoList", JSON.stringify(completedToDoList));
+    displayCompletedToDos();
+}
+
+function editToDo(index) {
+    const label = document.querySelector(`#label${index}`);
+    const currentText = label.textContent.trim(); //preserves current text
+    // Replace label content with input + save button
+    label.innerHTML = `
+      <input type="text" id="editInput${index}" value="${currentText}">
+      <button onclick="saveToDo(${index})">Save</button>
+    `; //onclick leaves function and disappears input text and button
+  }
+
+  function saveToDo(index) {
+      const input = document.querySelector(`#editInput${index}`);
+      toDoList[index].name = input.value; //edit array with new changes
+      displayToDos(); //show updated state
+  }
