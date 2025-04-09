@@ -8,6 +8,18 @@ h1 {
     border-radius: 10px;
 }
 
+.flex-layout {
+    display: flex;
+    justify-content: space-between;
+}
+
+.todos {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    background-color:bisque;
+}
+
 .toDoItem {
     color: black;
     list-style: none;
@@ -19,15 +31,23 @@ h1 {
     border-radius: 10px;
 }
 
+.completedToDoList {
+    display:flex; 
+    flex-direction: column-reverse;
+    background-color: blanchedalmond;
+    width: 50%;
+}
+
 .completedToDoItem {
     color: black;
     list-style: none;
     margin-left:-40px;
-    padding: 10px;
+    padding: 12px;
     border: 2px solid black;
     margin-bottom: 20px;
-    background-color: greenyellow;
+    background-color: rgb(110, 255, 110);
     border-radius: 10px;
+    
 }
 
 .js-input {
