@@ -56,19 +56,24 @@ function displayToDos() {
         const date = toDoObject.dueDate;
         todoElement.innerHTML += 
         `<li class='toDoItem'>
-        <input class= 'checkbox-todo' type='checkbox' data-index=${i} id="toDoLabel${i}"> 
-        <label for="toDoLabel${i}" id="label${i}">${name}</label><p class="dueDate">${date}<p>
-        <button onclick="removeToDo(${i})" class='removeToDo'>🗑️</button>
-        <button onclick="editToDo(${i})" class='editToDo'>Edit</button> 
+            <div class="left-content">
+                <input class= 'checkbox-todo' type='checkbox' data-index=${i} id="toDoLabel${i}"> 
+                <label for="toDoLabel${i}" id="label${i}">${name}</label>
+                <p class="dueDate">${date}<p>
+            </div>
+            <div class="right-content">
+                <button onclick="editToDo(${i})" class='editToDo'>Edit</button>
+                <button onclick="removeToDo(${i})" class='removeToDo'>🗑️</button> 
+            </div>
         </li>`;
     }
     // check checkboxes
     const checkboxes = document.querySelectorAll(".checkbox-todo");
     checkboxes.forEach((checkbox) => {
         checkbox.addEventListener("change", () => {
-            console.log("Checkbox state changed!");  // Debugging line
             const index = Number(checkbox.dataset.index);
             const checkedToDo = toDoList[index];
+
             if (checkbox.checked) {
                 completedToDoList.push(checkedToDo);
                 localStorage.setItem("completedToDoList", JSON.stringify(completedToDoList))
@@ -79,7 +84,6 @@ function displayToDos() {
                 localStorage.setItem("completedToDoList", JSON.stringify(completedToDoList))
             }
             displayCompletedToDos();
-            
         })
     })
 }
@@ -92,10 +96,9 @@ function displayCompletedToDos() {
         const name = completedToDoList[i].name;
         const date = completedToDoList[i].dueDate;
 
-
         completedToDoElement.innerHTML +=
         `<li class="completedToDoItem">
-            ✅ ${name} <p><em>Completed on ${date}</em></p> <button class="removeCompletedToDo" onclick="removeCompletedToDo(${i})">❌</button>
+            ✅ ${name} <button class="removeCompletedToDo" onclick="removeCompletedToDo(${i})">❌</button>
         </li>
         `
     }
@@ -113,13 +116,14 @@ function editToDo(index) {
     const currentText = label.textContent.trim(); //preserves current text
     // Replace label content with input + save button
     label.innerHTML = `
-      <input type="text" id="editInput${index}" value="${currentText}">
-      <button onclick="saveToDo(${index})">Save</button>
+    <input type="text" id="editInput${index}" value="${currentText}">
+    <button onclick="saveToDo(${index})">Save</button>
     `; //onclick leaves function and disappears input text and button
-  }
+}
 
-  function saveToDo(index) {
-      const input = document.querySelector(`#editInput${index}`);
-      toDoList[index].name = input.value; //edit array with new changes
-      displayToDos(); //show updated state
-  }
+function saveToDo(index) {
+    const input = document.querySelector(`#editInput${index}`);
+    toDoList[index].name = input.value; //edit array with new changes
+    localStorage.setItem("todos", JSON.stringify(toDoList));
+    displayToDos(); //show updated state
+}

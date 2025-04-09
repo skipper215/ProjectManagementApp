@@ -61,3 +61,26 @@ li {
     width: 300px;
 }
 
+.dueDate {
+    font-family: sans-serif;
+}
+
+.completedToDoItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+#remove-button {
+    display: inline-block;
+}
+
+.toDoItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; 
+}
+
+
+  
+ 
