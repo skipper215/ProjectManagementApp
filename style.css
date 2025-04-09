@@ -9,13 +9,24 @@ h1 {
 }
 
 .toDoItem {
-    color: brown;
+    color: black;
     list-style: none;
     margin-left:-40px;
     padding: 10px;
     border: 2px solid black;
     margin-bottom: 20px;
     background-color: beige;
+    border-radius: 10px;
+}
+
+.completedToDoItem {
+    color: black;
+    list-style: none;
+    margin-left:-40px;
+    padding: 10px;
+    border: 2px solid black;
+    margin-bottom: 20px;
+    background-color: greenyellow;
     border-radius: 10px;
 }
 
