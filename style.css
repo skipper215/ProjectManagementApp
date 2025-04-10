@@ -2,8 +2,12 @@
     font-family: Arial, Helvetica, sans-serif;
 }
 
+body {
+    background-color: 	rgb(88, 101, 242);
+}
+
 h1 {
-    background-color:burlywood;
+    background-color:	#84ade7;
     padding: 20px;
     border-radius: 10px;
 }
@@ -18,11 +22,14 @@ li {
     justify-content: space-between;
 }
 
+.checkbox-todo {
+    transform: scale(1.15);
+}
+
 .todos {
     display: flex;
     flex-direction: column;
     width: 50%;
-    background-color:bisque;
 }
 
 .toDoItem {
@@ -39,7 +46,6 @@ li {
 .completedToDoList {
     display:flex; 
     flex-direction: column-reverse;
-    background-color: blanchedalmond;
     width: 50%;
 }
 
@@ -81,6 +87,9 @@ li {
     align-items: center; 
 }
 
-
+.dragging {
+    opacity: 1;
+    background-color: #84ade7;
+}
   
  

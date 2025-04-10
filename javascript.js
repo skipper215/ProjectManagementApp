@@ -7,6 +7,16 @@ let completedToDoList = JSON.parse(localStorage.getItem("completedToDoList")) ||
 
 window.onload = displayToDos(), displayCompletedToDos();
 
+// Functionality to drag tasks vertically (using Sortablejs)
+function sortingToDo() {
+    const todoElement = document.querySelector(".todos")
+    Sortable.create(todoElement, {
+        animation: 200,
+        ghostClass: 'dragging', // .dragging class for css
+        onEnd: (event) => {
+            console.log(`Moved item from ${event.oldIndex} to ${event.newIndex}`);}
+    });
+}
 
 function addToDo() {
     const inputElement = document.querySelector(".js-input");
@@ -86,6 +96,7 @@ function displayToDos() {
             displayCompletedToDos();
         })
     })
+    sortingToDo();
 }
 
 function displayCompletedToDos() {
