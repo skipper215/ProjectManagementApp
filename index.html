@@ -11,27 +11,14 @@
         <button class="js-add" onclick="addToDo(), displayToDos()" >add</button> 
         <input class="js-date" type="date">
         
-
-        <div class="flex-display"> 
-            <!-- TODOS -->
-            <div id="category1" class="sortable-container">
-                <h2> Category 1 </h2>
-                <ul class="todos"></ul>
-            </div>
-
-            <div id="category2" class="sortable-container">
-                <h2> Category 2 </h2>
-                <ul class="todos"></ul> <!-- only here for sortableJS, no input here-->
-            </div>
-
-            <!-- Completed TODOS -->
-             <div>
-                <ul class="completedToDoList"></ul>
-             </div>
-        
+        <div class="flex-layout"> 
+            <ul class="todos"> <!-- Where the activities go -->
+                
+            </ul>
+            <ul class="completedToDoList">
+                
+            </ul>
         </div>
-
-        
 
         <p></p>
         <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
