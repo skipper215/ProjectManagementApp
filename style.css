@@ -12,24 +12,39 @@ h1 {
     border-radius: 10px;
 }
 
+h2 {
+    display: block;
+    margin-bottom: 10px;
+    background-color: 	rgb(88, 101, 242);
+}
+
 li {
     width: 100%;
     overflow-wrap:anywhere;
 }
 
-.flex-layout {
-    display: flex;
-    justify-content: space-between;
-}
+
+.sortable-container {
+    width: 50%;
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border: 2px solid #ccc;
+    padding: 10px;
+  }
 
 .checkbox-todo {
     transform: scale(1.15);
 }
 
+.sortable-container {
+    background-color: #84ade7;
+}
+
 .todos {
     display: flex;
     flex-direction: column;
-    width: 50%;
 }
 
 .toDoItem {
