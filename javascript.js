@@ -6,8 +6,25 @@ let completedToDoList = JSON.parse(localStorage.getItem("completedToDoList")) ||
 window.onload = () => {
     renderCategories(),
     displayCompletedToDos();
+    // removeAllCategories();
+    // removeAllCompletedToDo();
 }
 
+// for testing
+function removeAllCategories() {
+    for(let category in categories) {
+        delete categories[category];
+    }
+    console.log(categories);
+    localStorage.setItem("categories", JSON.stringify(categories));
+    renderCategories();
+}
+
+function removeAllCompletedToDo() {
+    completedToDoList.length = 0;
+    localStorage.setItem("completedToDoList", JSON.stringify(completedToDoList));
+    renderCategories();
+}
 
 function addCategory(categoryName) {
     if(categoryName != categories[categoryName]) { //category does not exist, add
@@ -68,8 +85,8 @@ function renderCategories() {
             li.classList.add("toDoItem");
             li.innerHTML += 
             `<div class="left-content">
-                <input class= 'checkbox-todo' type='checkbox' data-id="${item.id}" data-category="${categoryName}" ${item.completed ? "checked" : ""}> 
-                <label for="toDoLabel${item.id}" id="label${item.id}">${item.name}</label>
+                <input class='checkbox-todo' type='checkbox' data-id="${item.id}" data-category="${categoryName}" ${item.completed ? "checked" : ""}> 
+                <label class='toDoLabel' for="toDoLabel${item.id}" id="label${item.id}">${item.name}</label>
                 <p class="dueDate">${item.dueDate}<p>
             </div>
             <div class="right-content">
