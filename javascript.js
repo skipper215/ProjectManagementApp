@@ -20,6 +20,17 @@ function addCategory(categoryName) {
     renderCategories();
 }
 
+function removeCategory(categoryName) {
+    for(let category in categories) {
+        if(categoryName === 'General') return;
+        if(category === categoryName) {
+            delete categories[categoryName];
+            console.log("New array from deletion:" + categories);
+        }
+    }
+    renderCategories();
+}
+
 function renderCategories() {
     
     const categoryCtnElem = document.querySelector(".category-container");
@@ -34,20 +45,22 @@ function renderCategories() {
         const categoryTitle = document.createElement("h2");
         categoryTitle.textContent = categoryName;
 
+        const categoryRemove = document.createElement("div");
+        if(categoryName != 'General') {
+        categoryRemove.innerHTML += 
+        `
+        <button class="categoryRemove" onclick="removeCategory('${categoryName}')">Delete Category</button>
+        `
+        }
+
+
         const todoListElement = document.createElement("ul");
         todoListElement.classList.add("todos");
 
         categoryElement.appendChild(categoryTitle);
         categoryElement.appendChild(todoListElement);
-
+        categoryTitle.appendChild(categoryRemove);
         categoryCtnElem.appendChild(categoryElement);
-
-//        `<li class='toDoItem'>
-//             <div class="left-content">
-//                 <input class= 'checkbox-todo' type='checkbox' data-index=${i} id="toDoLabel${i}"> 
-//                 <label for="toDoLabel${i}" id="label${i}">${name}</label>
-//                 <p class="dueDate">${date}<p>
-
 
         // Add to-do items for this category
         categories[categoryName].forEach((item, index) => {
@@ -60,7 +73,7 @@ function renderCategories() {
                 <p class="dueDate">${item.dueDate}<p>
             </div>
             <div class="right-content">
-                <button class='editToDo'>Edit</button>
+                <button onclick="editToDo()" class='editToDo'>Edit</button>
                 <button onclick="removeToDo('${categoryName}', '${item.id}')" class='removeToDo'>🗑️</button> 
             </div>
             `
@@ -68,9 +81,7 @@ function renderCategories() {
             li.setAttribute("data-index", index); // Store the index as a data attribute
             todoListElement.appendChild(li);
         });
-        console.log(categories);
         localStorage.setItem("categories", JSON.stringify(categories));
-        console.log(categories)
         checkboxHandler(categoryName);
     }
     allowSort();
@@ -111,16 +122,18 @@ function allowSort() {
             group:"todos",
             animation: 150,
             onEnd: function (event) {
-                const fromCategory = event.from.id;
+                const fromCategory = event.from.parentElement.id;
                 const toCategory = event.to.parentElement.id;
 
                 // Move the item from one category to another
                 if (fromCategory !== toCategory) {
-                    //moveItemBetweenCategories(fromCategory, toCategory, event.oldIndex, event.newIndex);
+                    console.log(categories);
+                    moveItemBetweenCategories(fromCategory, toCategory, event.oldIndex, event.newIndex);
                     console.log("move between category");
                 } else { // Move item within a category
-                    //moveItemWithinCategory(fromCategory, event.oldInex);
+                    moveItemWithinCategory(fromCategory, event.oldIndex, event.newIndex);
                     console.log("move within category");
+                    console.log(categories);
                 }
 
                 // Save the updated categories to localStorage
@@ -128,6 +141,25 @@ function allowSort() {
             }
         })
     })
+}
+
+function moveItemBetweenCategories(fromCategory, toCategory, oldIndex, newIndex) {
+    fromCategory = categories[fromCategory];
+    toCategory = categories[toCategory];
+    const movedItem = fromCategory.splice(oldIndex, 1)[0];
+    //insert movedItem
+    toCategory.splice(newIndex, 0, movedItem);
+    localStorage.setItem("categories", JSON.stringify(categories));
+    renderCategories();
+}
+
+function moveItemWithinCategory(fromCategory, oldIndex, newIndex) {
+    const category = categories[fromCategory]
+    const movedItem = category.splice(oldIndex, 1)[0];
+    category.splice(newIndex,0,movedItem);
+    localStorage.setItem("categories", JSON.stringify(categories));
+    console.log(oldIndex + "moved to: " + newIndex)
+    renderCategories();
 }
 
 // add every ToDo to the "General" Category
@@ -157,11 +189,6 @@ function addToDo() {
         
     inputElement.value = ""; //clears search box
     localStorage.setItem("categories", JSON.stringify(categories));
-
-    console.log(inputDateElement.value);
-    console.log(inputElement.value);
-    console.log(categories);
-
 
 }
 
@@ -250,19 +277,19 @@ function removeCompletedToDo(index) {
     displayCompletedToDos();
 }
 
-// function editToDo(index) {
-//     const label = document.querySelector(`#label${index}`);
-//     const currentText = label.textContent.trim(); //preserves current text
-//     // Replace label content with input + save button
-//     label.innerHTML = `
-//     <input type="text" id="editInput${index}" value="${currentText}">
-//     <button onclick="saveToDo(${index})">Save</button>
-//     `; //onclick leaves function and disappears input text and button
-// }
+function editToDo(index) {
+    const label = document.querySelector(`#label${index}`);
+    const currentText = label.textContent.trim(); //preserves current text
+    // Replace label content with input + save button
+    label.innerHTML = `
+    <input type="text" id="editInput${index}" value="${currentText}">
+    <button onclick="saveToDo(${index})">Save</button>
+    `; //onclick leaves function and disappears input text and button
+}
 
-// function saveToDo(index) {
-//     const input = document.querySelector(`#editInput${index}`);
-//     toDoList[index].name = input.value; //edit array with new changes
-//     localStorage.setItem("todos", JSON.stringify(toDoList));
-//     displayToDos(); //show updated state
-// }
+function saveToDo(index) {
+    const input = document.querySelector(`#editInput${index}`);
+    toDoList[index].name = input.value; //edit array with new changes
+    localStorage.setItem("todos", JSON.stringify(toDoList));
+    displayToDos(); //show updated state
+}
