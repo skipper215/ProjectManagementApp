@@ -12,14 +12,20 @@ h1 {
     border-radius: 10px;
 }
 
-li {
-    width: 100%;
-    overflow-wrap:anywhere;
-}
 
-.flex-layout {
+.main-display {
     display: flex;
     justify-content: space-between;
+}
+
+.sortable-container {
+    display: flex;
+    flex-direction: column;
+    width: 110%;
+    background-color: #84ade7;
+    margin-top: 10px;
+    border: solid 2px black;
+    border-radius: 10px;
 }
 
 .checkbox-todo {
@@ -29,10 +35,14 @@ li {
 .todos {
     display: flex;
     flex-direction: column;
-    width: 50%;
+    width: 90%;
 }
 
 .toDoItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; 
+
     color: black;
     list-style: none;
     margin-left:-40px;
@@ -43,17 +53,22 @@ li {
     border-radius: 10px;
 }
 
+.category-container {
+    
+    width: 45%;
+}
+
 .completedToDoList {
     display:flex; 
     flex-direction: column-reverse;
-    width: 50%;
+    width: 45%;
 }
 
 .completedToDoItem {
     color: black;
     list-style: none;
     margin-left:-40px;
-    padding: 12px;
+    padding: 15px;
     border: 2px solid black;
     margin-bottom: 20px;
     background-color: rgb(110, 255, 110);
@@ -81,11 +96,6 @@ li {
     display: inline-block;
 }
 
-.toDoItem {
-    display: flex;
-    justify-content: space-between;
-    align-items: center; 
-}
 
 .dragging {
     opacity: 1;

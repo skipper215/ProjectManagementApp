@@ -3,22 +3,27 @@
     <head>
         <title>ToDoList App</title>
         <link rel="stylesheet" href="style.css"> 
+        <meta charset="UTF-8">
     </head>
 
     <body>
         <h1>To Do List: </h1>
-        <input class="js-input" onkeydown="handleKeyDown(event), displayToDos()" placeholder="What's next?"></input>
-        <button class="js-add" onclick="addToDo(), displayToDos()" >add</button> 
+        <input class="js-input" onkeydown="handleKeyDown(event), renderCategories()" placeholder="What's next?"></input>
+        <input class="js-add-category" onkeydown="handleCategoryKeyDown(event)" placeholder="Add a category: ">
+        <button class="js-add" onclick="addToDo(), renderCategories()" >add</button>  
         <input class="js-date" type="date">
         
-        <div class="flex-layout"> 
-            <ul class="todos"> <!-- Where the activities go -->
-                
-            </ul>
+        <div class="main-display">
+            <div class="category-container"> 
+            
+            </div>
             <ul class="completedToDoList">
-                
+                    
             </ul>
         </div>
+        
+
+        
 
         <p></p>
         <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
