@@ -82,29 +82,31 @@ function renderCategories() {
             todoListElement.appendChild(li);
         });
         localStorage.setItem("categories", JSON.stringify(categories));
-        checkboxHandler(categoryName);
+        
     }
+    checkboxHandler();
     allowSort();
 }
 
-function checkboxHandler(category) {
+function checkboxHandler() {
     const checkboxes = document.querySelectorAll(".checkbox-todo");
         checkboxes.forEach((checkbox) => {
             checkbox.addEventListener("change", () => {
                 // find the toDo by id
                 const toDoId = checkbox.dataset.id;
                 const category = checkbox.dataset.category;
-                const checkedToDo = categories[category].find(t => t.id === toDoId); // find and grab toDo
-                console.log("before" + checkedToDo);
-                checkedToDo.completed = true;
-                console.log(completedToDoList);
-                console.log("after" + checkedToDo);
 
-                if (checkbox.checked) {
-                    completedToDoList.push(checkedToDo);
-                    localStorage.setItem("completedToDoList", JSON.stringify(completedToDoList))
-                    
+                console.log(completedToDoList);
+                const checkedToDo = categories[category].find(t => t.id === toDoId); 
+                console.log(checkedToDo);
+                checkedToDo.completed = true;
+
+                if (checkbox.checked) { //a bug with checkedToDo object being null
                     removeToDo(category, toDoId);
+                    completedToDoList.push(checkedToDo);
+                    localStorage.setItem("completedToDoList", JSON.stringify(completedToDoList));
+                    localStorage.setItem("categories", JSON.stringify(categories));
+                    
                 } else {
                     //remove it from completedToDoList
                     completedToDoList = completedToDoList.filter(item => item !== checkedToDo); //keep all items 'as long as' != toDoObject
@@ -262,6 +264,9 @@ function displayCompletedToDos() {
     const completedToDoElement = document.querySelector(".completedToDoList");
     completedToDoElement.innerHTML = ""; //remove previous instance of completedToDoList display
     for (let i=0; i<completedToDoList.length; i++) {
+        if(completedToDoList[i] === null) {
+            completedToDoList.splice(i,1);
+        }
         const name = completedToDoList[i].name;
 
         completedToDoElement.innerHTML +=
