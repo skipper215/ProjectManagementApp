@@ -26,6 +26,12 @@ function removeAllCompletedToDo() {
     renderCategories();
 }
 
+function addCategoryFromInput() { //helper function for adding category using button
+    const inputElement = document.querySelector(".js-add-category");
+    addCategory(inputElement.value.trim());
+    inputElement.value = ""; //reset input bar
+}
+
 function addCategory(categoryName) {
     if(categoryName != categories[categoryName]) { //category does not exist, add
         categories[categoryName] = []; // creates new key:value pair 

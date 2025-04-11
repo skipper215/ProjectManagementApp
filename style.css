@@ -59,10 +59,10 @@ h1 {
 
 
 .toDoLabel {
-    display: inline-block; /* or inline-block */
-    white-space: normal;
-    word-break: break-word;
-    overflow-wrap: break-word;
+    display: inline-block; 
+    white-space: normal; /*allow wrapping at spaces */
+    word-break: break-word; /* break up long words with white spaces */
+    overflow-wrap: break-word; /*modern fallback for word-break*/
 }
 
 .category-container {
