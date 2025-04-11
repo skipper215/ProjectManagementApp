@@ -69,11 +69,11 @@ function renderCategories() {
             li.innerHTML += 
             `<div class="left-content">
                 <input class= 'checkbox-todo' type='checkbox' data-id="${item.id}" data-category="${categoryName}" ${item.completed ? "checked" : ""}> 
-                <label for="toDoLabel${index}" id="label${index}">${item.name}</label>
+                <label for="toDoLabel${item.id}" id="label${item.id}">${item.name}</label>
                 <p class="dueDate">${item.dueDate}<p>
             </div>
             <div class="right-content">
-                <button onclick="editToDo()" class='editToDo'>Edit</button>
+                <button onclick="editToDo('${item.id}')" class='editToDo'>Edit</button>
                 <button onclick="removeToDo('${categoryName}', '${item.id}')" class='removeToDo'>🗑️</button> 
             </div>
             `
@@ -94,9 +94,11 @@ function checkboxHandler(category) {
                 // find the toDo by id
                 const toDoId = checkbox.dataset.id;
                 const category = checkbox.dataset.category;
-                const toDo = categories[category].find(t => t.id === toDoId); // find and grab toDo
-                toDo.completed = true;
-                const checkedToDo = toDo;
+                const checkedToDo = categories[category].find(t => t.id === toDoId); // find and grab toDo
+                console.log("before" + checkedToDo);
+                checkedToDo.completed = true;
+                console.log(completedToDoList);
+                console.log("after" + checkedToDo);
 
                 if (checkbox.checked) {
                     completedToDoList.push(checkedToDo);
@@ -277,19 +279,27 @@ function removeCompletedToDo(index) {
     displayCompletedToDos();
 }
 
-function editToDo(index) {
-    const label = document.querySelector(`#label${index}`);
+function editToDo(itemId) {
+    const label = document.querySelector(`#label${itemId}`);
     const currentText = label.textContent.trim(); //preserves current text
     // Replace label content with input + save button
     label.innerHTML = `
-    <input type="text" id="editInput${index}" value="${currentText}">
-    <button onclick="saveToDo(${index})">Save</button>
-    `; //onclick leaves function and disappears input text and button
+    <input type="text" id="editInput${itemId}" value="${currentText}">
+    <button onclick="saveToDo('${itemId}')">Save</button>`; 
+    //onclick leaves function and disappears input text and button
 }
 
-function saveToDo(index) {
-    const input = document.querySelector(`#editInput${index}`);
-    toDoList[index].name = input.value; //edit array with new changes
-    localStorage.setItem("todos", JSON.stringify(toDoList));
-    displayToDos(); //show updated state
+function saveToDo(itemId) {
+    const input = document.querySelector(`#editInput${itemId}`);
+    //find item 
+    for(let categoryName in categories) {
+        const category = categories[categoryName]; 
+        const validItem = category.find(item => item.id === itemId);
+        if(validItem) {
+            validItem.name = input.value;
+            break;
+        }
+    }
+    localStorage.setItem("categories", JSON.stringify(categories));
+    renderCategories(); 
 }

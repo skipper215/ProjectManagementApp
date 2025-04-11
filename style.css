@@ -76,7 +76,7 @@ h1 {
     
 }
 
-.js-input {
+.js-input, .js-add-category {
     padding: 2px;
     border-radius: 4px;
     width: 300px;
