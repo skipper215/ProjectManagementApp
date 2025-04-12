@@ -14,9 +14,16 @@ window.onload = () => {
 // Render todays date 
 function renderTitle() {
     const now = new Date();
-    const parts = now.toUTCString().split(" ");
-    console.log(parts[2]);
-    document.querySelector(".title").innerHTML = `📝To Do List <div class="todays-date">📆 ${parts[0]} ${parts[1]} ${parts[2]} </div>` ; 
+
+    const options = {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+        timeZone: "Australia/Sydney"
+      };
+    const formattedDate = now.toLocaleDateString("en-AU", options);
+    document.querySelector(".title").innerHTML = `📝To Do List <div class="todays-date">📆 ${formattedDate} </div>` ; 
 }
 
 // for testing
@@ -135,6 +142,9 @@ function renderCategories() {
 
             // if it has a due date
             if (item.dueDate != "") {
+                // refresh new days left 
+                item.daysLeft = daysLeft(item.dueDate);  
+
                 const due = document.createElement("p");
                 due.classList.add("dueDate");
                 due.textContent = `📅${item.dueDate} ⏰${item.daysLeft} days left`;
@@ -179,10 +189,7 @@ function checkboxHandler() {
                 // find the toDo by id
                 const toDoId = checkbox.dataset.id;
                 const category = checkbox.dataset.category;
-
-                console.log(completedToDoList);
                 const checkedToDo = categories[category].find(t => t.id === toDoId); 
-                console.log(checkedToDo);
                 checkedToDo.completed = true;
 
                 if (checkbox.checked) { 
@@ -254,9 +261,12 @@ function daysLeft(dueDate) {
     const oneDay = 1000 * 60 * 60 * 24;
     const today = new Date(); // new date object default set to todays date
     today.setHours(0, 0, 0, 0); // clear time for accuracy
-    dueDate = new Date(dueDate).setHours(0, 0, 0, 0); 
+    
+    // dueDate is in DD/MM/YYYY format, convert it to YYYY-MM-DD
+    const [day, month, year] = dueDate.split('/');
+    const due = new Date(`${year}-${month}-${day}`); //date object takes in YYYY-MM-DD
 
-    const diffTime = dueDate - today; 
+    const diffTime = due - today; 
     const diffDays = Math.floor(diffTime / oneDay)
 
     return diffDays;
@@ -286,7 +296,7 @@ function addToDo() {
             id: crypto.randomUUID(),
             name: inputElement.value,
             dueDate: formatDate,
-            daysLeft: daysLeft(inputDateElement.value),
+            daysLeft: daysLeft(inputDateElement.value), //YYYY/MM/DD
             completed: false
         });
     }
