@@ -1,17 +1,23 @@
 * {
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: sans-serif;
 }
 
 body {
     background-color: 	rgb(88, 101, 242);
 }
 
-h1 {
+.title {
     background-color:	#84ade7;
     padding: 10px;
     border-radius: 10px;
+
 }
 
+.todays-date {
+    display: inline-block;
+    margin-left: 10%;
+
+}
 
 .main-display {
     display: flex;
@@ -21,7 +27,7 @@ h1 {
 .sortable-container {
     display: flex;
     flex-direction: column;
-    width: 110%;
+    width: 100%;
     background-color: #84ade7;
     margin-top: 5px;
     border: solid 2px black;
@@ -30,6 +36,7 @@ h1 {
 
 .checkbox-todo {
     transform: scale(1.15);
+    margin-right: 7px;
 }
 
 .todos {
@@ -61,6 +68,7 @@ h1 {
 
 .toDoLabel {
     display: inline-block; 
+    font-weight: 500;
     white-space: normal; /*allow wrapping at spaces */
     word-break: break-word; /* break up long words with white spaces */
     overflow-wrap: break-word; /*modern fallback for word-break*/
@@ -75,6 +83,7 @@ h1 {
     display:flex; 
     flex-direction: column;
     width: 45%;
+    margin-top: 5px;
 }
 
 .completedToDoItem {
@@ -86,7 +95,7 @@ h1 {
     margin-left:-40px;
     padding: 15px;
     border: 2px solid black;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     background-color: rgb(110, 255, 110);
     border-radius: 10px;
     
@@ -126,7 +135,6 @@ h1 {
 .heading-container h2 {
     border-radius: 5px;
     padding: 3px;
-    background-color: rgba(93, 83, 233, 0.185);
 }
 
 .date-overdue {

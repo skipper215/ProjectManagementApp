@@ -6,12 +6,18 @@ let completedToDoList = JSON.parse(localStorage.getItem("completedToDoList")) ||
 window.onload = () => {
     renderCategories(),
     displayCompletedToDos();
+    renderTitle();
     // removeAllCategories();
     // removeAllCompletedToDo();
 }
 
-
-
+// Render todays date 
+function renderTitle() {
+    const now = new Date();
+    const parts = now.toUTCString().split(" ");
+    console.log(parts[2]);
+    document.querySelector(".title").innerHTML = `📝To Do List <div class="todays-date">📆 ${parts[0]} ${parts[1]} ${parts[2]} </div>` ; 
+}
 
 // for testing
 function removeAllCategories() {

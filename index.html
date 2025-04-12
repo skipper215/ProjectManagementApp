@@ -7,7 +7,8 @@
     </head>
 
     <body>
-        <h1>To Do List: </h1>
+        <h1 class="title">To Do List</h1><h1 class="js-todays-date"></h1> 
+  
         <input class="js-input" onkeydown="handleKeyDown(event), renderCategories()" placeholder="What's next?"></input>
         <button class="js-add" onclick="addToDo(), renderCategories()" >add</button>  
         <input class="js-date" type="date">
@@ -22,9 +23,6 @@
                     
             </ul>
         </div>
-        
-
-        
 
         <p></p>
         <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
