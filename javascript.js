@@ -10,6 +10,9 @@ window.onload = () => {
     // removeAllCompletedToDo();
 }
 
+
+
+
 // for testing
 function removeAllCategories() {
     for(let category in categories) {
@@ -28,7 +31,7 @@ function removeAllCompletedToDo() {
 
 function addCategoryFromInput() { //helper function for adding category using button
     const inputElement = document.querySelector(".js-add-category");
-    addCategory(inputElement.value.trim());
+    if(inputElement.value != "") {addCategory(inputElement.value.trim());}
     inputElement.value = ""; //reset input bar
 }
 
@@ -44,14 +47,17 @@ function addCategory(categoryName) {
 }
 
 function removeCategory(categoryName) {
-    for(let category in categories) {
-        if(categoryName === 'General') return;
-        if(category === categoryName) {
-            delete categories[categoryName];
-            console.log("New array from deletion:" + categories);
+    const confirmRemove = confirm(`Are you sure you want to delete the "${categoryName}" category?`);
+
+    if(confirmRemove) {
+        for(let category in categories) {
+            if(categoryName === 'General') continue;
+            if(category === categoryName) {
+                delete categories[categoryName];
+            }
         }
+        renderCategories();
     }
-    renderCategories();
 }
 
 function renderCategories() {
@@ -64,43 +70,92 @@ function renderCategories() {
         const categoryElement = document.createElement("div");
         categoryElement.classList.add("sortable-container");
         categoryElement.id = categoryName;
+        
+        const headingContainer = document.createElement("div");
+        headingContainer.classList.add("heading-container");
 
         const categoryTitle = document.createElement("h2");
         categoryTitle.textContent = categoryName;
 
-        const categoryRemove = document.createElement("div");
+        const removeCategory = document.createElement("div");
+        
         if(categoryName != 'General') {
-        categoryRemove.innerHTML += 
+        removeCategory.innerHTML += 
         `
         <button class="categoryRemove" onclick="removeCategory('${categoryName}')">Delete Category</button>
         `
         }
 
-
         const todoListElement = document.createElement("ul");
         todoListElement.classList.add("todos");
 
-        categoryElement.appendChild(categoryTitle);
-        categoryElement.appendChild(todoListElement);
-        categoryTitle.appendChild(categoryRemove);
         categoryCtnElem.appendChild(categoryElement);
+        
+        categoryElement.appendChild(headingContainer);
+        categoryElement.appendChild(todoListElement);
+
+        headingContainer.appendChild(categoryTitle);
+        headingContainer.appendChild(removeCategory);
 
         // Add to-do items for this category
         categories[categoryName].forEach((item, index) => {
             const li = document.createElement("li");
             li.classList.add("toDoItem");
+            // VISUAL STRUCTURE IN INNERHTML FORM
+            // li.innerHTML += 
+            //     `<div class="left-content">
+            //         <input class='checkbox-todo' type='checkbox' data-id="${item.id}" data-category="${categoryName}" ${item.completed ? "checked" : ""}> 
+            //         <label class='toDoLabel' for="toDoLabel${item.id}" id="label${item.id}">${item.name}</label>
+            //     </div>
+            //     `
+            const leftContent = document.createElement("div");
+            leftContent.classList.add("left-content");
+
+            const checkbox = document.createElement("input");
+            checkbox.classList.add("checkbox-todo");
+            checkbox.type = "checkbox";
+            checkbox.dataset.id = item.id;
+            checkbox.dataset.category = categoryName;
+            if (item.completed) checkbox.checked = true;
+
+            const label = document.createElement("label");
+            label.classList.add("toDoLabel");
+            label.id = `label${item.id}`;
+            label.htmlFor = `toDoLabel${item.id}`;
+            label.textContent = item.name;
+
+            leftContent.appendChild(checkbox);
+            leftContent.appendChild(label);
+
+            // if it has a due date
+            if (item.dueDate != "") {
+                const due = document.createElement("p");
+                due.classList.add("dueDate");
+                due.textContent = `📅${item.dueDate} ⏰${item.daysLeft} days left`;
+                leftContent.appendChild(due);
+
+                // different visuals for due dates 
+                if(item.daysLeft < 0) {
+                    li.classList.add("date-overdue");
+                    due.textContent = `📅${item.dueDate} ⏰${item.daysLeft} days OVERDUE`;
+                } else if (item.daysLeft > 0 && item.daysLeft < 3) {
+                    li.classList.add("date-mid-priority");
+                } else if (item.daysLeft === 0) {
+                    li.classList.add("date-high-priority");
+                    due.textContent = `📅${item.dueDate} ⏰ due TODAY`;
+                }
+
+            }
+            li.appendChild(leftContent);
+        
+           // Add Right-Content - Edit and Remove Buttons
             li.innerHTML += 
-            `<div class="left-content">
-                <input class='checkbox-todo' type='checkbox' data-id="${item.id}" data-category="${categoryName}" ${item.completed ? "checked" : ""}> 
-                <label class='toDoLabel' for="toDoLabel${item.id}" id="label${item.id}">${item.name}</label>
-                <p class="dueDate">${item.dueDate}<p>
-            </div>
+            `
             <div class="right-content">
                 <button onclick="editToDo('${item.id}')" class='editToDo'>Edit</button>
                 <button onclick="removeToDo('${categoryName}', '${item.id}')" class='removeToDo'>🗑️</button> 
             </div>
             `
-            
             li.setAttribute("data-index", index); // Store the index as a data attribute
             todoListElement.appendChild(li);
         });
@@ -124,7 +179,7 @@ function checkboxHandler() {
                 console.log(checkedToDo);
                 checkedToDo.completed = true;
 
-                if (checkbox.checked) { //a bug with checkedToDo object being null
+                if (checkbox.checked) { 
                     removeToDo(category, toDoId);
                     completedToDoList.push(checkedToDo);
                     localStorage.setItem("completedToDoList", JSON.stringify(completedToDoList));
@@ -189,19 +244,34 @@ function moveItemWithinCategory(fromCategory, oldIndex, newIndex) {
     renderCategories();
 }
 
-// add every ToDo to the "General" Category
+function daysLeft(dueDate) {
+    const oneDay = 1000 * 60 * 60 * 24;
+    const today = new Date(); // new date object default set to todays date
+    today.setHours(0, 0, 0, 0); // clear time for accuracy
+    dueDate = new Date(dueDate).setHours(0, 0, 0, 0); 
+
+    const diffTime = dueDate - today; 
+    const diffDays = Math.floor(diffTime / oneDay)
+
+    return diffDays;
+}
+
+// adds every ToDo from user-input to the "General" Category
 function addToDo() {
     const inputElement = document.querySelector(".js-input");
     const inputDateElement = document.querySelector(".js-date")
-    // Date format to DD-MM-YYYY
+
+    // Date format to DD-MM-YYYY 
     const [year, month, day] = inputDateElement.value.split('-');
     const formatDate = `${day}/${month}/${year}`
+
 
     if(inputElement.value && !inputDateElement.value) {
         categories["General"].push({
             id: crypto.randomUUID(),
             name: inputElement.value,
             dueDate: "",
+            daysLeft: "", 
             completed: false
         });
     }
@@ -210,6 +280,7 @@ function addToDo() {
             id: crypto.randomUUID(),
             name: inputElement.value,
             dueDate: formatDate,
+            daysLeft: daysLeft(inputDateElement.value),
             completed: false
         });
     }
@@ -290,14 +361,31 @@ function displayCompletedToDos() {
         if(completedToDoList[i] === null) {
             completedToDoList.splice(i,1);
         }
+        localStorage.setItem("completedToDoList", JSON.stringify(completedToDoList));
         const name = completedToDoList[i].name;
+        const id = completedToDoList[i].id;
 
         completedToDoElement.innerHTML +=
         `<li class="completedToDoItem">
-            ✅ ${name} <button class="removeCompletedToDo" onclick="removeCompletedToDo(${i})">❌</button>
+            ✅ ${name} 
+            <div>
+                <button class="returnCompletedToDo" onclick="returnCompletedToDo(${i})">🔁</button>
+                <button class="removeCompletedToDo" onclick="removeCompletedToDo(${i})">❌</button>
+            </div>
         </li>
         `
     }
+}
+
+function returnCompletedToDo(index) {
+    // remove from array using index and splice
+    // put into categories['General'] 
+    const movedItem = completedToDoList.splice(index, 1)[0];
+    movedItem.completed = false;
+    categories['General'].push(movedItem);
+    localStorage.setItem("completedToDoList", JSON.stringify(completedToDoList));
+    renderCategories();
+    displayCompletedToDos();
 }
 
 function removeCompletedToDo(index) {

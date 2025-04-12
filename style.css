@@ -8,7 +8,7 @@ body {
 
 h1 {
     background-color:	#84ade7;
-    padding: 20px;
+    padding: 10px;
     border-radius: 10px;
 }
 
@@ -23,7 +23,7 @@ h1 {
     flex-direction: column;
     width: 110%;
     background-color: #84ade7;
-    margin-top: 10px;
+    margin-top: 5px;
     border: solid 2px black;
     border-radius: 10px;
 }
@@ -36,6 +36,7 @@ h1 {
     display: flex;
     flex-direction: column;
     width: 90%;
+    margin-top: 0;
 }
 
 .toDoItem {
@@ -49,10 +50,10 @@ h1 {
 
     color: black;
     list-style: none;
-    margin-left:-40px;
+    margin-left:-35px;
     padding: 10px;
     border: 2px solid black;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     background-color: beige;
     border-radius: 10px;
 }
@@ -77,6 +78,9 @@ h1 {
 }
 
 .completedToDoItem {
+    display: flex;
+    justify-content: space-between;
+
     color: black;
     list-style: none;
     margin-left:-40px;
@@ -98,11 +102,6 @@ h1 {
     font-family: sans-serif;
 }
 
-.completedToDoItem {
-    display: flex;
-    justify-content: space-between;
-
-  }
 
 #remove-button {
     display: inline-block;
@@ -114,4 +113,30 @@ h1 {
     background-color: #84ade7;
 }
   
- 
+.heading-container { /* ctn for h2 category name + delete category button*/
+    display: flex; 
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 5px;
+    padding-right: 5px;
+    margin-top: -10px;
+    margin-bottom: -10px;
+}
+
+.heading-container h2 {
+    border-radius: 5px;
+    padding: 3px;
+    background-color: rgba(93, 83, 233, 0.185);
+}
+
+.date-overdue {
+    background-color: rgba(255, 0, 0, 0.699);
+}
+
+.date-mid-priority {
+    background-color: rgb(255, 166, 0);
+}
+
+.date-high-priority {
+    background-color: rgba(255, 238, 0, 0.774);
+}
