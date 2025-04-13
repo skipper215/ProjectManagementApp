@@ -8,20 +8,26 @@
 
     <body>
         <h1 class="title">To Do List</h1><h1 class="js-todays-date"></h1> 
-  
+        
         <input class="js-input" onkeydown="handleKeyDown(event), renderCategories()" placeholder="What's next?"></input>
-        <button class="js-add" onclick="addToDo(), renderCategories()" >add</button>  
         <input class="js-date" type="date">
+        <button class="js-add" onclick="addToDo(), renderCategories()" >+</button>  
+        
         <input class="js-add-category" onkeydown="handleCategoryKeyDown(event)" placeholder="Add a category: ">
-        <button class="js-add-category-btn" onclick="addCategoryFromInput()">add</button>
+        <button class="js-add-category-btn" onclick="addCategoryFromInput()">+</button>
 
         <div class="main-display">
             <div class="category-container"> 
             
             </div>
-            <ul class="completedToDoList">
-                    
-            </ul>
+
+
+            <div class="completedToDo-container">
+                    <h2 class="completed-title">Completed!</h2>
+                    <ul class="completedToDoList">
+
+                    </ul>
+            </div>
         </div>
 
         <p></p>

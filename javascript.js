@@ -327,52 +327,11 @@ function handleCategoryKeyDown(event) {
     }
 }
 
-// function displayToDos() {
-//     const todoElement = document.querySelector(".todos")
-//     todoElement.innerHTML = "";  // clear previous iteration of display
-//     for (let i=0; i<toDoList.length; i++) {
-//         const toDoObject = toDoList[i]
-//         const name = toDoObject.name;
-//         const date = toDoObject.dueDate;
-//         todoElement.innerHTML += 
-//         `<li class='toDoItem'>
-//             <div class="left-content">
-//                 <input class= 'checkbox-todo' type='checkbox' data-index=${i} id="toDoLabel${i}"> 
-//                 <label for="toDoLabel${i}" id="label${i}">${name}</label>
-//                 <p class="dueDate">${date}<p>
-//             </div>
-//             <div class="right-content">
-//                 <button onclick="editToDo(${i})" class='editToDo'>Edit</button>
-//                 <button onclick="removeToDo(${i})" class='removeToDo'>🗑️</button> 
-//             </div>
-//         </li>`;
-//     }
-//     // check checkboxes
-//     const checkboxes = document.querySelectorAll(".checkbox-todo");
-//     checkboxes.forEach((checkbox) => {
-//         checkbox.addEventListener("change", () => {
-//             const index = Number(checkbox.dataset.index);
-//             const checkedToDo = toDoList[index];
-
-//             if (checkbox.checked) {
-//                 completedToDoList.push(checkedToDo);
-//                 localStorage.setItem("completedToDoList", JSON.stringify(completedToDoList))
-//                 removeToDo(index);
-//             } else {
-//                 //remove it from completedToDoList
-//                 completedToDoList = completedToDoList.filter(item => item !== checkedToDo); //keep all items 'as long as' != toDoObject
-//                 localStorage.setItem("completedToDoList", JSON.stringify(completedToDoList))
-//             }
-//             displayCompletedToDos();
-//         })
-//     })
-//     sortingToDo();
-// }
-
 function displayCompletedToDos() {
     // add completedToDos to html
     const completedToDoElement = document.querySelector(".completedToDoList");
     completedToDoElement.innerHTML = ""; //remove previous instance of completedToDoList display
+
     for (let i=0; i<completedToDoList.length; i++) {
         if(completedToDoList[i] === null) {
             completedToDoList.splice(i,1);
@@ -382,15 +341,23 @@ function displayCompletedToDos() {
         const id = completedToDoList[i].id;
 
         completedToDoElement.innerHTML +=
-        `<li class="completedToDoItem">
-            ✅ ${name} 
+        `
+        <li class="completedToDoItem">
+            <div class="completed-left-content">
+            <p>✅ ${name} </p>
+            </div>
             <div>
                 <button class="returnCompletedToDo" onclick="returnCompletedToDo(${i})">🔁</button>
                 <button class="removeCompletedToDo" onclick="removeCompletedToDo(${i})">❌</button>
             </div>
         </li>
         `
+        if(completedToDoList[i].dueDate != "") {
+           document.querySelector(".completed-left-content").innerHTML += `<p>📝 Completed On: ${completedToDoList[i].dueDate}</p>`;
+        }
     }
+    
+
 }
 
 function returnCompletedToDo(index) {
