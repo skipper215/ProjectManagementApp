@@ -258,7 +258,7 @@ function moveItemWithinCategory(fromCategory, oldIndex, newIndex) {
 }
 
 function daysLeft(dueDate) {
-    const oneDay = 1000 * 60 * 60 * 24;
+    const oneDay = 1000 * 60 * 60 * 24; //number of milliseconds
     const today = new Date(); // new date object default set to todays date
     today.setHours(0, 0, 0, 0); // clear time for accuracy
     
@@ -266,7 +266,7 @@ function daysLeft(dueDate) {
     const [day, month, year] = dueDate.split('/');
     const due = new Date(`${year}-${month}-${day}`); //date object takes in YYYY-MM-DD
 
-    const diffTime = due - today; 
+    const diffTime = due - today; // difference in milliseconds
     const diffDays = Math.floor(diffTime / oneDay)
 
     return diffDays;
@@ -353,7 +353,16 @@ function displayCompletedToDos() {
         </li>
         `
         if(completedToDoList[i].dueDate != "") {
-           document.querySelector(".completed-left-content").innerHTML += `<p>📝 Completed On: ${completedToDoList[i].dueDate}</p>`;
+            const now = new Date();
+            const day = String(now.getDate()).padStart(2, '0');
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const year = String(now.getFullYear());
+            const formatDate = `${day}/${month}/${year}`;
+
+            const leftContentElem = document.querySelectorAll(".completed-left-content"); //querySelectorAll returns an nodeList/array of classes. 
+            const latestLeftContentElem = leftContentElem[leftContentElem.length - 1]; //get the latest class element (appended to nodeList)
+
+            latestLeftContentElem.innerHTML += `<p>📝 Completed On: ${formatDate}</p>`;
         }
     }
     
@@ -380,12 +389,30 @@ function removeCompletedToDo(index) {
 
 function editToDo(itemId) {
     const label = document.querySelector(`#label${itemId}`);
-    const currentText = label.textContent.trim(); //preserves current text
+    
+    // Check if it's already in editing mode (if input exists)
+    const existingInput = label.querySelector('input');
+    if (existingInput) {
+        return; // If input already exists, don't do anything
+    }
+
+    const currentText = label.textContent.trim(); // Preserve current text
+    
+    // Create input element and save button dynamically
+    const input = document.createElement('input');
+    input.type = "text";
+    input.id = `editInput${itemId}`;
+    input.value = currentText;
+
+    const saveButton = document.createElement('button');
+    saveButton.textContent = "Save";
+    saveButton.onclick = function () { saveToDo(itemId); }; // Attach event listener
+    
     // Replace label content with input + save button
-    label.innerHTML = `
-    <input type="text" id="editInput${itemId}" value="${currentText}">
-    <button onclick="saveToDo('${itemId}')">Save</button>`; 
-    //onclick leaves function and disappears input text and button
+    label.innerHTML = ''; // Clear current label content
+    label.appendChild(input);
+    label.appendChild(saveButton);
+
 }
 
 function saveToDo(itemId) {
@@ -396,6 +423,7 @@ function saveToDo(itemId) {
         const validItem = category.find(item => item.id === itemId);
         if(validItem) {
             validItem.name = input.value;
+            console.log(input.value);
             break;
         }
     }
