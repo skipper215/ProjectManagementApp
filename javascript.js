@@ -59,19 +59,45 @@ function addCategory(categoryName) {
     renderCategories();
 }
 
-function removeCategory(categoryName) {
-    const confirmRemove = confirm(`Are you sure you want to delete the "${categoryName}" category?`);
+function removeCategory(buttonElement,categoryName) {
 
-    if(confirmRemove) {
-        for(let category in categories) {
-            if(categoryName === 'General') continue;
-            if(category === categoryName) {
-                delete categories[categoryName];
-            }
+    for(let category in categories) {
+        if(categoryName === 'General') continue;
+        if(category === categoryName) {
+            confirmRemoveCategory(buttonElement, categoryName);
         }
-        renderCategories();
     }
 }
+
+function confirmRemoveCategory(buttonElement,categoryName) {
+    const container = buttonElement.parentElement; // the button's respective ".category-remove"
+    
+    const prevContainerText = container.innerHTML; //save remove button 
+    container.innerHTML = "";
+
+    const input = document.createElement("input");
+    input.className = "confirm-remove-input";
+    input.placeholder = "type: 'remove' to confirm";
+
+    const cancel = document.createElement("button");
+    cancel.className = "cancel-remove";
+    cancel.textContent = "Cancel";
+    cancel.onclick = () => {container.innerHTML = prevContainerText;};
+
+    // Add input and cancel button to container
+    container.appendChild(input);
+    container.appendChild(cancel);
+    input.focus();
+
+    // Handle input
+    input.addEventListener("keyup", (e) => {
+        if (e.key === "Enter" && input.value.trim() === "remove") {
+            delete categories[categoryName];
+            renderCategories();
+        }
+    });
+}
+
 
 function renderCategories() {
     
@@ -91,11 +117,12 @@ function renderCategories() {
         categoryTitle.textContent = categoryName;
 
         const removeCategory = document.createElement("div");
+        removeCategory.classList.add("category-remove");
         
         if(categoryName != 'General') {
         removeCategory.innerHTML += 
         `
-        <button class="categoryRemove" onclick="removeCategory('${categoryName}')">Delete Category</button>
+        <button class="categoryRemove" onclick="removeCategory(this,'${categoryName}')">Delete Category</button>
         `
         }
 
