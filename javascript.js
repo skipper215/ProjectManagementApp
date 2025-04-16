@@ -23,7 +23,7 @@ function renderTitle() {
         timeZone: "Australia/Sydney"
       };
     const formattedDate = now.toLocaleDateString("en-AU", options);
-    document.querySelector(".title").innerHTML = `📝To Do List <div class="todays-date">📆 ${formattedDate} </div>` ; 
+    document.querySelector(".title").innerHTML = `📝Project Scheduler <div class="todays-date">📆 ${formattedDate} </div>` ; 
 }
 
 // for testing
